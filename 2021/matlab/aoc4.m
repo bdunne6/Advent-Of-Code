@@ -48,14 +48,14 @@ assert(p2 == 3178)
 
 function [n,b] = load_input(file_path)
 txt = read_txt(file_path);
-txt_parts = strsplit(txt,['\r\n\r\n']);
-
+% txt_parts = strsplit(txt,['\r\n\r\n']);
+txt_parts = strsplit(txt,['\n\n']);
 n  = str2double(strsplit(txt_parts{1},','));
 b_txt = txt_parts(2:end);
 
 b = [];
 for i1 = 1:numel(b_txt)
-    bi1  = str2double(strsplit(b_txt{i1},{' ','\r\n'}));
+    bi1  = str2double(strsplit(b_txt{i1},{' ','\n'}));
     bi1 = bi1(~isnan(bi1));
     bi1 = reshape(bi1,[5,5])';
     b = cat(3,b,bi1);

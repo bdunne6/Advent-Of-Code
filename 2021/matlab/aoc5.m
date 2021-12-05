@@ -17,7 +17,7 @@ assert(p2 == 22088)
 function [lines] = load_input(file_path)
 txt = read_txt(file_path );
 
-lines = reshape(str2double(strsplit(strrep(txt, '->',','),{',','\r\n'})),4,[])';
+lines = reshape(str2double(strsplit(strrep(txt, '->',','),{',','\n'})),4,[])';
 % lines = [0,9 , 5,9;
 %     8,0 , 0,8;
 %     9,4 , 3,4;
