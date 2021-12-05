@@ -1,6 +1,5 @@
 clear;
-file_path = 'inputs\day_4.txt';
-[n,b] = load_input(file_path);
+[n,b] = load_input(fullfile(get_input_root(),'day_4.txt'));
 
 for i1 = 1:numel(n)
     s = ismember(b,n(1:i1));
@@ -19,7 +18,8 @@ snum = sum(~s(:,:,bw).*b_w,'all');
 
 p1 = snum*n(i1);
 %part1 answer
-p1
+disp(p1)
+assert(p1 == 41503)
 
 %start part2 
 for i1 = 1:numel(n)
@@ -41,7 +41,9 @@ b_w = b(:,:, w_new);
 snum = sum((~s(:,:,w_new)).*b_w,'all');
 
 p2 = snum*n(i1);
-p2
+disp(p2)
+assert(p2 == 3178)
+
 
 
 function [n,b] = load_input(file_path)
