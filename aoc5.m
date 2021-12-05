@@ -33,7 +33,7 @@ for i1 = 1:size(lines,1)
         ind = (t1 >= 0)&(t1 <= 1)&(t1==t2);
     end
     
-    if (dx == 0)||(dy == 0)
+    if (dx == 0)||(dy == 0)||1%comment the ||1 to get part 1 answer
         c = c + ind;
     end
 end
