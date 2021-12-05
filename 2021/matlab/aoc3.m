@@ -10,7 +10,7 @@
 % 1,1,0,0,1;
 % 0,0,0,1,0;
 % 0,1,0,1,0];
-input_path = fullfile('inputs','day_3.txt');
+input_path = fullfile(get_input_root,'day_3.txt');
 
 x = read_input(input_path);
 
@@ -21,7 +21,9 @@ g = bin2dec(num2str(g_b));
 e = bin2dec(num2str(e_b));
 
 %part 1 
-g*e
+p1 = g*e;
+disp(p1);
+assert(p1 == 4191876);
 
 %part 2
 x1 = x;
@@ -55,7 +57,9 @@ end
 co = bin2dec(num2str(x1));
 
 %part 2
-og*co
+p2 = og*co;
+disp(p2)
+assert(p2 == 3414905);
 
 function x = read_input(input_path)
 [txt] = read_txt(input_path);
