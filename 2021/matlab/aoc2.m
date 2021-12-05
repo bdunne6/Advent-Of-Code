@@ -1,5 +1,5 @@
-txt = read_txt(fullfile(get_input_root(),'day 2.txt'));
-lines = strsplit(txt,'\r\n');
+txt = read_txt(fullfile(get_input_root(),'day_2.txt'));
+lines = strsplit(txt,'\n');
 
 parse_moves = @(lines,key) (str2double(extractAfter(lines(contains(lines,key)),' ')));
 f = parse_moves(lines,"forward"); 
