@@ -24,8 +24,9 @@ print(p1)
 #4191876
 
 #part 2
-o_bit_criteria = lambda x: np.uint8(np.median(x) > 0)
-co2_bit_criteria = lambda x: np.uint8(not o_bit_criteria(x))
+#https://stackoverflow.com/questions/134626/which-is-more-preferable-to-use-lambda-functions-or-nested-functions-def
+def o_bit_criteria(x): return np.uint8(np.median(x) > 0)
+def co2_bit_criteria(x): return np.uint8(not o_bit_criteria(x))
 
 def iterate_bit_criteria(b,bit_criteria):
     for i1 in range(0,b.shape[1]):
@@ -42,3 +43,4 @@ co2_b = iterate_bit_criteria(b,co2_bit_criteria)
 o = bin_array_to_int(o_b)
 co2 = bin_array_to_int(co2_b)
 print(o*co2)
+#3414905
