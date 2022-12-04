@@ -1,6 +1,3 @@
-import time
-
-t0 = time.perf_counter()
 input_path = '../inputs/day_3.txt'
 lines = open(input_path).read().strip().split('\n')
 
@@ -30,6 +27,3 @@ for i in range(0,len(lines),3):
     points += get_points(c_intersect)
     
 print(points)
-
-t1 = time.perf_counter()
-print(t1-t0)
