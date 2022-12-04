@@ -6,7 +6,6 @@ lines = strsplit(x,newline);
 n_pairs_part1  = 0;
 n_pairs_part2  = 0;
 for i1 = 1:numel(lines)
-    
     lines{i1} = strip(lines{i1});
     
     p =  strsplit(lines{i1},',');
@@ -20,7 +19,7 @@ for i1 = 1:numel(lines)
         n_pairs_part1 = n_pairs_part1 + 1;
     end
     
-    if any(ismember(ri1,ri2))||any(ismember(ri2,ri1))
+    if any(ismember(ri1,ri2))
         n_pairs_part2 = n_pairs_part2 + 1;
     end
 end
