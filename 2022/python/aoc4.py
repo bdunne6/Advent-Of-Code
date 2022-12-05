@@ -11,7 +11,7 @@ for (i,l) in enumerate(lines):
     s2 = set(range(int(r2[0]),int(r2[1])+1,1))
     if set.issubset(s1, s2) or set.issubset(s2, s1):
         n_part1 += 1
-    if set.intersection(s1, s2) or set.intersection(s2, s1):
+    if set.intersection(s1, s2):
         n_part2 += 1
         
 print(n_part1)
