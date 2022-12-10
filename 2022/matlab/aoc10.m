@@ -1,4 +1,4 @@
-input_path = fullfile(get_input_root,'day_10_sample.txt');
+input_path = fullfile(get_input_root,'day_10.txt');
 x = read_txt(input_path);
 lines = strsplit(x,'\r\n');
 
@@ -35,12 +35,27 @@ while true
                 xv(i0+1) = x;
                 break;
             end
-        end
-        
+        end        
     end
 end
 ind = [1:numel(xv)];
 p1 = sum(xv(20:40:end).*ind(20:40:end));
 disp(p1)
+
+img1 = nan([6,40]);
+is = 1;
+for i1 = 1:size(img1,1)
+    ir = is:is+size(img1,2)-1;
+    b = abs(xv(ir) - (0:39))<=1;
+    img1(i1,:) = b;
+
+    is = ir(end)+1;
+end
+figure;
+imagesc(img1)
+
+% %part 2
+% img1 = reshape(xv(1:240),[40,6])';
+% img2 = 
 
 
