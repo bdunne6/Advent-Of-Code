@@ -4,15 +4,14 @@ txt = read_txt(input_path);
 monkeys = strsplit(txt,'\r\n\r\n');
 clear('m');
 for i1 = 1:numel(monkeys)
-    mi1 = monkeys{i1};
-    mi1 = strsplit(mi1,'\r\n');
-    m(i1).id = str2double(extractBetween(mi1{1},'Monkey',':'));
-    m(i1).items = str2double(strsplit(extractAfter(mi1{2},'Starting items: '),','));
-    m(i1).operation = extractAfter(mi1{3},'Operation: ');
-    m(i1).test = str2double(extractAfter(mi1{4},'Test: divisible by '));
-    m(i1).if_true = str2double(extractAfter(mi1{5},'If true: throw to monkey '));
-    m(i1).if_false = str2double(extractAfter(mi1{6},'If false: throw to monkey '));
-    m(i1).count = uint64(0);
+    mi1 = strsplit(monkeys{i1},'\r\n');
+    mid = str2double(extractBetween(mi1{1},'Monkey',':'))+1;
+    m(mid).items = str2double(strsplit(extractAfter(mi1{2},'Starting items: '),','));
+    m(mid).operation = eval(['@(old) (' extractAfter(mi1{3},'Operation: new = ') ')']);
+    m(mid).test = str2double(extractAfter(mi1{4},'Test: divisible by '));
+    m(mid).if_true = str2double(extractAfter(mi1{5},'If true: throw to monkey '))+1;
+    m(mid).if_false = str2double(extractAfter(mi1{6},'If false: throw to monkey '))+1;
+    m(mid).count = uint64(0);
 end
 cm = prod([m.test]);
 
@@ -27,7 +26,7 @@ for ip = [1,2]
             for i2 = 1:numel(items)
                 item_i2 = items(i2);
                 m(i1).count = m(i1).count + 1;
-                wn = apply_operation(item_i2,m(i1).operation);
+                wn = m(i1).operation(item_i2);
                 if ip == 1
                     wn = floor(wn/3);
                 elseif ip == 2
@@ -38,19 +37,12 @@ for ip = [1,2]
                 else
                     m_id = m(i1).if_false;
                 end
-                m(i1).items = m(i1).items(2:end);
-                mt_ind = [m.id] == m_id;
-                m(mt_ind).items = [m(mt_ind).items,wn];
+                m(i1).items(1) = [];
+                m(m_id).items = [m(m_id).items,wn];
             end
         end
     end
     scount = sort([m.count],'descend');
     answer = scount(1)*scount(2);
     disp(answer)
-end
-
-function wn = apply_operation(w,op)
-old = w;
-eval([op,';']);
-wn = new;
 end
