@@ -1,4 +1,4 @@
-clear;
+clear all;
 input_path = fullfile(get_input_root,'day_12.txt');
 txt = read_txt(input_path);
 lines = strsplit(txt,'\r\n');
@@ -24,20 +24,34 @@ for i1 = 1:numel(lines)
         end
     end
 end
-best_cnt = nan(size(m));
-best_cnt(pos(1),pos(2)) = 0;
+m_cnt = nan(size(m));
+m_cnt(pos(1),pos(2)) = 0;
 cnt = 0;
-cnt = find_path(m,pos,best_cnt,cnt,d,pos_e);
-disp(cnt)
 
-function [n_out] = find_path(m,pos,best_cnt,cnt,d,pos_e)
-    persistent n 
+% global n;
+% n = [];
+%cnt = find_path(m,pos,m_cnt,cnt,d,pos_e);
+n = search_all_paths(m,pos,m_cnt,cnt,d,pos_e);
+disp(min(n))
+
+function n = search_all_paths(m,pos,m_cnt,cnt,d,pos_e) 
+n = [];
+best_cnt = inf(size(m)); 
+find_path(m,pos,m_cnt,cnt,d,pos_e);
+n = n -1;
+function [n_out] = find_path(m,pos,m_cnt,cnt,d,pos_e)
+    %persistent n 
+    %persistent best_cnt
     n_out = [];
+    
+    if isempty(best_cnt)
+       best_cnt = inf(size(m)); 
+    end
     
     cnt = cnt + 1;    
     if all(pos == pos_e)
         n = [n,cnt];
-        n_out = n
+        n_out = n;
         return
     end
 
@@ -47,11 +61,13 @@ function [n_out] = find_path(m,pos,best_cnt,cnt,d,pos_e)
         posi1 = moves(i1,:);
         %find_path(m,posi1,best_cnt,cnt,d);
         %cnt < best_cnt(posi1(1),posi1(2))
-        if isnan(best_cnt(posi1(1),posi1(2)))||cnt < best_cnt(posi1(1),posi1(2))
+        if  isnan(m_cnt(posi1(1),posi1(2)))&&(cnt < best_cnt(posi1(1),posi1(2)))
+            m_cnt(posi1(1),posi1(2)) = cnt;
             best_cnt(posi1(1),posi1(2)) = cnt;
-            n_out = find_path(m,posi1,best_cnt,cnt,d,pos_e);
+            n_out = find_path(m,posi1,m_cnt,cnt,d,pos_e);
         end
     end
+end
 end
 
 function cmoves = get_valid_moves(m,pos,d)
