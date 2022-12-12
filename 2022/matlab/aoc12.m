@@ -1,4 +1,3 @@
-clear all;
 %% parse input
 input_path = fullfile(get_input_root,'day_12.txt');
 txt = read_txt(input_path);
@@ -7,25 +6,23 @@ txt = read_txt(input_path);
 %% part 1
 m_cnt = nan(size(m));
 m_cnt(s_pos(1),s_pos(2)) = 0;
-[n,bc,ph] = search_all_paths(m,s_pos,m_cnt,0,e_pos);
-p1 = min(n);
+[cnts,paths] = find_paths(m,s_pos,m_cnt,0,e_pos);
+[p1,i_min] = min(cnts);
 disp(p1);
 
 %% part 2
 [is,js] = find(m == 1);
-
-pos_s = [is,js];
-
+a_pos = [is,js];
 mb = inf(size(m));
-for i1 = 1:numel(ph)
-    pi1 = ph{i1};
-    for i2 = 1:size(pos_s,1)
+for i1 = 1:numel(paths)
+    pi1 = paths{i1};
+    for i2 = 1:size(a_pos,1)
         %im = find(ismember(pi1,pos_s(i2,:),'rows'));
-        im = find(all(pi1==pos_s(i2,:),2));
+        im = find(all(pi1==a_pos(i2,:),2));
         if ~isempty(im)
             pd = size(pi1,1) - im;
-            if pd < mb(pos_s(1),pos_s(1))
-                mb(pos_s(i2,1),pos_s(i2,2)) = pd;
+            if pd < mb(a_pos(1),a_pos(1))
+                mb(a_pos(i2,1),a_pos(i2,2)) = pd;
             end
         end
     end
@@ -33,8 +30,7 @@ end
 p2 = min(mb(:));
 disp(p2);
 
-
-%% helper functions 
+%% local functions 
 function [m,s_pos,e_pos] = parse_input(txt)
 lines = strsplit(txt,'\r\n');
 letters = 'abcdefghijklmnopqrstuvwxyz';
@@ -45,7 +41,7 @@ for i1 = 1:numel(lines)
         ci2 = line_i1(i2);
         if strcmp('S',ci2)
             s_pos = [i1,i2];
-            m(i1,i2) = 0;
+            m(i1,i2) = 1;
         elseif strcmp('E',ci2)
             e_pos = [i1,i2];
             m(i1,i2) = 26;
@@ -56,28 +52,28 @@ for i1 = 1:numel(lines)
 end
 end
 
-function [n,best_cnt,p_all] = search_all_paths(m,pos,m_cnt,cnt,pos_e)
+function [cnts,paths] = find_paths(m,pos,m_cnt,cnt,pos_e)
 d = [-1,0;1,0;0,-1;0,1];
-n = [];
+cnts = [];
 best_cnt = inf(size(m));
-p_all = [];
-find_path(pos,m_cnt,cnt,[]);
-n = n-1;
-    function find_path(pos,m_cnt,cnt,pos_hist)
+paths = [];
+recurse_paths(pos,m_cnt,cnt,[]);
+cnts = cnts-1;
+    function recurse_paths(pos,m_cnt,cnt,pos_hist)
         cnt = cnt + 1;
         pos_hist = cat(1,pos_hist,pos);
         if all(pos == pos_e)
-            n = [n,cnt];
-            p_all = [p_all,{pos_hist}];
+            cnts = [cnts,cnt];
+            paths = [paths,{pos_hist}];
             return
         end
         moves = get_valid_moves(m,pos,d);
         for i1 = 1:size(moves,1)
-            posi1 = moves(i1,:);
-            if  isnan(m_cnt(posi1(1),posi1(2)))&&(cnt < best_cnt(posi1(1),posi1(2)))
-                m_cnt(posi1(1),posi1(2)) = cnt;
-                best_cnt(posi1(1),posi1(2)) = cnt;
-                find_path(posi1,m_cnt,cnt,pos_hist);
+            pos_i1 = moves(i1,:);
+            if  isnan(m_cnt(pos_i1(1),pos_i1(2)))&&(cnt < best_cnt(pos_i1(1),pos_i1(2)))
+                m_cnt(pos_i1(1),pos_i1(2)) = cnt;
+                best_cnt(pos_i1(1),pos_i1(2)) = cnt;
+                recurse_paths(pos_i1,m_cnt,cnt,pos_hist);
             end
         end
     end
