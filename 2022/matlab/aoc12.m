@@ -4,10 +4,8 @@ txt = read_txt(input_path);
 [m,s_pos,e_pos] = parse_input(txt);
 
 %% part 1
-m_cnt = nan(size(m));
-m_cnt(s_pos(1),s_pos(2)) = 0;
-[cnts,paths] = find_paths(m,s_pos,m_cnt,0,e_pos);
-[p1,i_min] = min(cnts);
+[cnts,paths] = find_paths(m,s_pos,e_pos);
+p1 = min(cnts);
 disp(p1);
 
 %% part 2
@@ -52,17 +50,18 @@ for i1 = 1:numel(lines)
 end
 end
 
-function [cnts,paths] = find_paths(m,pos,m_cnt,cnt,pos_e)
+function [cnts,paths] = find_paths(m,s_pos,e_pos)
+m_cnt = nan(size(m));
+m_cnt(s_pos(1),s_pos(2)) = 0;
 d = [-1,0;1,0;0,-1;0,1];
 cnts = [];
 best_cnt = inf(size(m));
 paths = [];
-recurse_paths(pos,m_cnt,cnt,[]);
-cnts = cnts-1;
+recurse_paths(s_pos,m_cnt,-1,[]);
     function recurse_paths(pos,m_cnt,cnt,pos_hist)
         cnt = cnt + 1;
         pos_hist = cat(1,pos_hist,pos);
-        if all(pos == pos_e)
+        if all(pos == e_pos)
             cnts = [cnts,cnt];
             paths = [paths,{pos_hist}];
             return
@@ -81,9 +80,9 @@ end
 
 function vm = get_valid_moves(m,pos,d)
 vm = pos + d;
-i_valid = false(size(vm,1),1);
+i_v = false(size(vm,1),1);
 for i1 = 1:size(vm,1)
-    i_valid(i1) = (vm(i1,1)<=size(m,1))&&(vm(i1,2)<=size(m,2))&&(vm(i1,1)>0)&&(vm(i1,2)>0)&&(m(vm(i1,1),vm(i1,2))-m(pos(1),pos(2))<=1);
+    i_v(i1) = (vm(i1,1)<=size(m,1))&&(vm(i1,2)<=size(m,2))&&(vm(i1,1)>0)&&(vm(i1,2)>0)&&(m(vm(i1,1),vm(i1,2))-m(pos(1),pos(2))<=1);
 end
-vm = vm(i_valid,:);
+vm = vm(i_v,:);
 end
