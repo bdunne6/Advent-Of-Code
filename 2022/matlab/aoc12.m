@@ -15,7 +15,6 @@ mb = inf(size(m));
 for i1 = 1:numel(paths)
     pi1 = paths{i1};
     for i2 = 1:size(a_pos,1)
-        %im = find(ismember(pi1,pos_s(i2,:),'rows'));
         im = find(all(pi1==a_pos(i2,:),2));
         if ~isempty(im)
             pd = size(pi1,1) - im;
