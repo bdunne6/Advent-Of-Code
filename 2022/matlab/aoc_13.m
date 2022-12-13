@@ -1,5 +1,5 @@
 %% parse input
-input_path = fullfile(get_input_root,'day_13_sample.txt');
+input_path = fullfile(get_input_root,'day_13.txt');
 txt = read_txt(input_path);
 
 etxt = ['x = {',txt, '};'];
@@ -15,16 +15,13 @@ for i1 = 1:n_pairs
     
     x1 = x{ind};
     x2 = x{ind+1};
-    r(i1) = compare(x1,x2,1);
+    r(i1) = compare(x1,x2);
     
 end
 p1 = sum(find(r));
 disp(p1)
 
-function r = compare(x1,x2,top)
-if nargin < 3
-    top = 0;
-end
+function r = compare(x1,x2)
 r = nan;
 for i1 = 1:min(numel(x1),numel(x2))
     disp('comparing:')
@@ -52,7 +49,7 @@ if isnan(r)
     if numel(x1) > numel(x2)
         r = 0;
         return;
-    elseif (numel(x1) <= numel(x2))&&top
+    elseif (numel(x1) < numel(x2))
         r = 1;
         return;
     end
