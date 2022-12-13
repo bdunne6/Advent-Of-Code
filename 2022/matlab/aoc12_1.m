@@ -21,7 +21,7 @@ disp(p2)
 
 figure;
 imagesc(m);
-[r,c] = ind2sub(size(m),p);
+[r,c] = ind2sub(size(m),s_p);
 hold on;
 plot(c,r,'.-r')
 
