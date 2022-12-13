@@ -2,32 +2,30 @@
 input_path = fullfile(get_input_root,'day_12.txt');
 txt = read_txt(input_path);
 [m,s_pos,e_pos] = parse_input(txt);
+s_i = sub2ind(size(m),s_pos(1),s_pos(2));
+e_i = sub2ind(size(m),e_pos(1),e_pos(2));
+
+g = construct_graph(m);
 
 %% part 1
-[cnts,paths] = find_paths(m,s_pos,e_pos);
-p1 = min(cnts);
-disp(p1);
+[s_p,p1] = shortestpath(g,s_i,e_i);
+disp(p1)
 
 %% part 2
-[is,js] = find(m == 1);
-a_pos = [is,js];
-mb = inf(size(m));
-for i1 = 1:numel(paths)
-    pi1 = paths{i1};
-    for i2 = 1:size(a_pos,1)
-        im = find(all(pi1==a_pos(i2,:),2));
-        if ~isempty(im)
-            pd = size(pi1,1) - im;
-            if pd < mb(a_pos(1),a_pos(1))
-                mb(a_pos(i2,1),a_pos(i2,2)) = pd;
-            end
-        end
-    end
-end
-p2 = min(mb(:));
-disp(p2);
+r_g = digraph(g.Edges.EndNodes(:,2),g.Edges.EndNodes(:,1));
+[n_ids,n_d] = nearest(r_g, e_i, p1+1);
+n_a = n_d(m(n_ids)==1);
 
-%% local functions 
+p2 = n_a(1);
+disp(p2)
+
+figure;
+imagesc(m);
+[r,c] = ind2sub(size(m),s_p);
+hold on;
+plot(c,r,'.-r')
+
+%% local functions
 function [m,s_pos,e_pos] = parse_input(txt)
 lines = strsplit(txt,'\r\n');
 letters = 'abcdefghijklmnopqrstuvwxyz';
@@ -48,33 +46,20 @@ for i1 = 1:numel(lines)
     end
 end
 end
-
-function [cnts,paths] = find_paths(m,s_pos,e_pos)
-m_cnt = nan(size(m));
-m_cnt(s_pos(1),s_pos(2)) = 0;
+function g = construct_graph(m)
 d = [-1,0;1,0;0,-1;0,1];
-cnts = [];
-best_cnt = inf(size(m));
-paths = [];
-recurse_paths(s_pos,m_cnt,-1,[]);
-    function recurse_paths(pos,m_cnt,cnt,pos_hist)
-        cnt = cnt + 1;
-        pos_hist = cat(1,pos_hist,pos);
-        if all(pos == e_pos)
-            cnts = [cnts,cnt];
-            paths = [paths,{pos_hist}];
-            return
-        end
-        moves = get_valid_moves(m,pos,d);
-        for i1 = 1:size(moves,1)
-            pos_i1 = moves(i1,:);
-            if  isnan(m_cnt(pos_i1(1),pos_i1(2)))&&(cnt < best_cnt(pos_i1(1),pos_i1(2)))
-                m_cnt(pos_i1(1),pos_i1(2)) = cnt;
-                best_cnt(pos_i1(1),pos_i1(2)) = cnt;
-                recurse_paths(pos_i1,m_cnt,cnt,pos_hist);
-            end
-        end
+s = [];
+t = [];
+for i1 = 1:size(m,1)
+    for i2 = 1:size(m,2)
+        moves = get_valid_moves(m,[i1,i2],d);
+        t_i2 = sub2ind(size(m),moves(:,1),moves(:,2));
+        s_i2 = sub2ind(size(m),i1,i2)*ones(size(t_i2,1),1);
+        s = cat(1,s,s_i2);
+        t = cat(1,t,t_i2);
     end
+end
+g = digraph(s,t);
 end
 
 function vm = get_valid_moves(m,pos,d)
