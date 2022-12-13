@@ -38,6 +38,7 @@ end
 p2 = prod(i_dp);
 disp(p2)
 
+%% functions
 function r = sort_func(x1,x2)
 r = compare(x1,x2);
 if r == 0
@@ -87,11 +88,10 @@ i = 2;
 while i <= length(x)
     j = i;
     while j > 1 && cfun(x(j-1),x(j))
-        t =  x(j);
-        x(j) = x(j-1);
-        x(j-1) = t;
+         [x(j),x(j-1)] = swap(x(j),x(j-1));
         j = j - 1;
     end 
     i = i + 1;
 end 
 end
+function [b, a] = swap(a, b);end
