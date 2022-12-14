@@ -49,11 +49,8 @@ ir = false(size(m)); %positions at rest
 void = 0;
 plugged = 0;
 i1 = 0;
-while (~void)&(~plugged)
-    s_ind = m==2;
-    s_m = s_ind&(~ir);
-    
-    [rs,cs] = find(s_m);
+rs = []; cs = [];
+while (~void)&&(~plugged)
     if ~isempty(rs)
         for i2 = 1:numel(rs)
             rc_m = [[rs(i2)+1,cs(i2)];
@@ -68,6 +65,8 @@ while (~void)&(~plugged)
                     if m(rc_m(i3,1),rc_m(i3,2)) == 0
                         m(rs(i2),cs(i2)) = 0;
                         m(rc_m(i3,1),rc_m(i3,2)) = 2;
+                        rs = rc_m(i3,1);
+                        cs = rc_m(i3,2);
                         moved = 1;
                         break;
                     end
@@ -78,7 +77,9 @@ while (~void)&(~plugged)
                 end
             end
             if (~moved)&&(~void)
-                ir(rs(i2),cs(i2)) = true;
+                m(rs(i2),cs(i2)) = 2;
+                rs = [];
+                cs = [];
             end
             break;
         end
@@ -86,7 +87,8 @@ while (~void)&(~plugged)
         if m(s_rc(1),s_rc(2)) == 2
             plugged = 1;
         else
-            m(s_rc(1),s_rc(2)) = 2;
+            rs = s_rc(1);
+            cs = s_rc(2);
         end
     end
     i1 = i1+1;
@@ -101,7 +103,7 @@ end
 figure(1);
 imagesc(m+2*(~ir&m==2))
 drawnow();
-p1 = sum(ir(:));
+p1 = sum(m==2,'all');
 disp(p1);
 
 
