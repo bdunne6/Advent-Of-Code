@@ -16,15 +16,18 @@ s = [500,0];
 
 all_points = cat(1,s,rock_paths{:});
 
-xmin = min(all_points(:,1));
-xmax = max(all_points(:,1));
 ymin = min(all_points(:,2));
-ymax = max(all_points(:,2));
+ymax = max(all_points(:,2))+2;
+xmin = s(1) - (ymax-ymin+2);
+xmax = s(1) + (ymax-ymin+2);
+
 xy_ranges = [xmin,xmax,ymin,ymax];
 
 x = xmin:xmax;
 y = ymin:ymax;
 m = zeros(numel(y),numel(x));
+
+rock_paths = cat(1,rock_paths,{[xmin,ymax;xmax,ymax]});
 
 s_rc = xy_to_rc(s,xy_ranges);
 m(s_rc(1),s_rc(2)) = 3;
@@ -44,7 +47,9 @@ ir = false(size(m)); %positions at rest
 
 %% part 1
 void = 0;
-while (~void)
+plugged = 0;
+i1 = 0;
+while (~void)&(~plugged)
     s_ind = m==2;
     s_m = s_ind&(~ir);
     
@@ -78,17 +83,24 @@ while (~void)
             break;
         end
     else
-        m(s_rc(1)+1,s_rc(2)) = 2;
+        if m(s_rc(1),s_rc(2)) == 2
+            plugged = 1;
+        else
+            m(s_rc(1),s_rc(2)) = 2;
+        end
     end
-    
-%     figure(1);
-%     imagesc(m+2*(~ir&m==2))
-%     drawnow();
+    i1 = i1+1;
+    if mod(i1,10000) == 0
+        figure(1);
+        imagesc(m+2*(~ir&m==2))
+        caxis([0 4]);
+        drawnow();
+    end
 end
 
-    figure(1);
-    imagesc(m+2*(~ir&m==2))
-    drawnow();
+figure(1);
+imagesc(m+2*(~ir&m==2))
+drawnow();
 p1 = sum(ir(:));
 disp(p1);
 
