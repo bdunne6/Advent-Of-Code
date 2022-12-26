@@ -1,51 +1,43 @@
-import math
 import numpy as np
-from copy import deepcopy
+
 input_path = '../inputs/day_25.txt'
 x = open(input_path).read()
 lines = x.splitlines();
 
 
-def increment(x,p):
-    if len(x) <= p:
-        x.extend(['0'])
-    
-    if x[p] == '=':
-        x[p] = '-'
-        
-    elif x[p] == '-':
-        x[p] = '0'
-        
-    elif x[p] == '0':
-        x[p] = '1'
-        
-    elif x[p] == '1':
-        x[p] = '2'
-        
-    elif x[p] == '2':
-        x[p] = '='
-        increment(x,p+1)
+ds = {'=':-2,'-':-1,'0':0,'1':1,'2':2}
+di = {v: k for k, v in ds.items()}
 
-x = ['0'] 
-# print(x)
-# increment(x,0)
+            
+def snafu_to_int(s):
+   v = 0
+   for (i,c) in enumerate(reversed(s)):
+       v += (5**i)*ds[c]
+   return v
 
-d1 = dict()
-
-for i in range(1,10000000):
-    increment(x,0)
-    xi = deepcopy(x)
-    xi = ''.join(x[::-1])
-    d1.update({i:xi})
-    #if i%100 == 0:
-    #    print(i)
-   
-d2 = {v: k for k, v in d1.items()}
-
+def int_to_snafu(xi):
+    x = np.base_repr(xi, base=5)
+    x = [*x]
+    x = list(reversed(list(map(int,x))))
+    for p in range(0,len(x)):
+        if (p == len(x)-1) and (x[p]>2):
+            x.append(0)
+        if x[p] == 3:
+            x[p] = -2
+            x[p+1] += 1
+        elif x[p] == 4:
+            x[p] = -1
+            x[p+1] += 1
+        elif x[p] == 5:
+            x[p] = 0
+            x[p+1] += 1
+    s =[di[x] for x in x]
+    s = ''.join(reversed(s))
+    return s
 
 v = [0]*len(lines)
 for (i,sn) in enumerate(lines):
-    v[i] = d2[sn]
+    v[i] = snafu_to_int(sn)
     
-p1  = d1[sum(v)]
+p1  = int_to_snafu(sum(v))
 print(p1)
