@@ -40,4 +40,5 @@ for (i,sn) in enumerate(lines):
     v[i] = snafu_to_int(sn)
     
 p1  = int_to_snafu(sum(v))
+#part 1
 print(p1)
