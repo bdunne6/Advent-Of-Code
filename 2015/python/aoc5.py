@@ -4,17 +4,15 @@ input_path = r'..\inputs\day_5.txt'
 txt = open(input_path).read()
 lines = txt.split('\n')
 
+
+#part 1 
 vowels = set('aeiou')
 disallowed_substrings = ['ab', 'cd', 'pq','xy']
-
-s = lines[0]
-
 
 nice_count = 0
 
 for s in lines:
     vowel_count = 0
-    
     nice = False
     duplicate_count = 0
     for (i,c) in enumerate(s):  
@@ -36,3 +34,41 @@ for s in lines:
         nice_count += 1
 
 print(nice_count)
+
+#part 2
+
+nice_count = 0
+
+for s in lines:
+    pcount = dict()
+    pair_repeat = False
+    for i in range(0,len(s)-1):
+        cpair = s[i:i+2]
+        if cpair in pcount:
+            if i > pcount[cpair][-1] + 1:
+                pcount[cpair].append(i)
+                pair_repeat = True
+                break
+        else:
+            pcount[cpair] = [i]
+    
+    max_pair_repeats = max([len(v) for v in pcount.values()])
+    
+    gap_repeat = False
+    for i in range(1,len(s)-1):
+       if s[i-1] == s[i+1]:
+           gap_repeat = True
+           break
+    
+    is_nice = gap_repeat and pair_repeat
+    if is_nice:
+        nice_count += 1
+
+print(nice_count)
+
+
+
+    
+
+
+
