@@ -2,3 +2,4 @@
 *.asv
 *.pyc
 2022/python/.spyproject/*
+.spyproject/
