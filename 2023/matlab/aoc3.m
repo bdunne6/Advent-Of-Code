@@ -8,19 +8,18 @@ lines = strsplit(x,newline);
 symbols = {'#','$','%','&','*','+','-','/','=','@'};
 
 %% part 1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-c1 = [];
+c_raw = [];
 for i1 = 1:numel(lines)
     line_i1 = lines{i1};
     line_i1 = strip(line_i1);
-    c1 = cat(1,c1,line_i1);
-    m = regexp(line_i1,'(\d+)','tokens');
+    c_raw = cat(1,c_raw,line_i1);
 end
 
-c1 = num2cell(c1);
-smask = ismember(c1,symbols);
+c_raw = num2cell(c_raw);
+smask = ismember(c_raw,symbols);
 smask_n = conv2(double(smask),ones(3),'same')>0;
 
-nmask = ~isnan(arrayfun(@str2double,c1));
+nmask = ~isnan(arrayfun(@str2double,c_raw));
 
 lmask = zeros(size(nmask));
 for i1 = 1:size(nmask,1)
@@ -37,11 +36,10 @@ end
 ids = ids(2:end);
 
 p1 = 0;
-
 id_map = containers.Map('KeyType', 'double', 'ValueType', 'double');
 for i1 = 1:numel(ids)
     i_i2 = ids(i1) == lmask;
-    nc = c1(i_i2);
+    nc = c_raw(i_i2);
     v_i2 = str2double([nc{:}]);
     id_map(ids(i1)) = v_i2;
     p1 = p1 + v_i2;
