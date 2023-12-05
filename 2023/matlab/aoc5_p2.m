@@ -1,6 +1,6 @@
 clear;
 input_path = fullfile(get_input_root,'day_5.txt');
-input_path = fullfile(get_input_root,'day_5_sample.txt');
+%input_path = fullfile(get_input_root,'day_5_sample.txt');
 
 x = read_txt(input_path);
 % lines = strsplit(x,newline);
@@ -65,17 +65,20 @@ sm = [sv(:),sl(:)];
 % disp(i0)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-l = 1:1322500873;
+l = 1:1000:1e9;
 
-
+l = 108957001-5000:1:1e9;
 map_keys_rev = fliplr(map_keys);
 for i0 = 1:numel(l)
     y = loc_in_seed(maps,map_keys_rev,sm,l(i0));
     if y
         break;
     end
+    if mod(i0,100000)==0
+       disp(i0) 
+    end
 end
-disp(i0)
+disp(l(i0))
 
 function y = loc_in_seed(maps,map_keys,sm,x)
 
