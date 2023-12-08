@@ -12,7 +12,6 @@ code = 'MLKJIHGFEDCBA';
 
 
 x = read_txt(input_path);
-crlf = [char(13),char(10)];
 lines = strsplit(x,crlf);
 
 x = [];
