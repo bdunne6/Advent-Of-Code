@@ -70,3 +70,11 @@ for i1 = 1:numel(s)
     end
 end
 end
+function v = get_v(m)
+    fnames = fieldnames(m);
+    v = [];
+    for i1 = 1:numel(fnames)
+       v = cat(2,v,m.(fnames{i1}));
+    end
+end
+
