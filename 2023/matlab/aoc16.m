@@ -7,7 +7,7 @@ x = cat(1,lines{:});
 
 %% part 1
 b = {[1,0;0,1]};
-p1 = count_energized(x,b,1);
+p1 = count_energized(x,b,0);
 disp(p1);
 
 %% part 2
@@ -28,7 +28,7 @@ end
 
 %run through all starting states
 e = zeros(size(bs));
-parfor i1 = 1:numel(bs)
+for i1 = 1:numel(bs)
     b0 = bs(i1);
     e(i1) = count_energized(x,b0,0);
 end
@@ -37,7 +37,9 @@ disp(p2);
 
 
 function y = count_energized(x,b,p)
-b_past = containers.Map();%remove beam states that already existed
+%b_past = containers.Map(1,1);%remove beam states that already existed
+b_past = false([110,110,3,3]);
+%remove(b_past,1);
 xe = zeros(size(x));
 while ~isempty(b)
     i_rem = cellfun(@isempty,b);
@@ -62,10 +64,11 @@ while ~isempty(b)
             b{i2} = [b1(1,:);d1];
             
             bt = [b1(1,:);-d1];
-            c_key = num2str(bt(:)');
-            if ~b_past.isKey(c_key)
+%             c_key = num2str(bt(:)');
+            c_key = get_key(bt);
+            if ~b_past(c_key)
                 b{end+1} = [b1(1,:);-d1];
-                b_past(c_key) = [];
+                b_past(c_key) = true;
             end
         elseif ne ==  '\'
             b1(2,:) = fliplr(d);
@@ -79,11 +82,11 @@ while ~isempty(b)
         break;
     end
     if ~isempty(b{i2})
-        c_key = num2str(b{i2}(:)');
-        if b_past.isKey(c_key)
+        c_key = get_key(b{i2});
+        if b_past(c_key)
             b{i2} = [];
         else
-            b_past(c_key) = [];
+            b_past(c_key) = true;
         end
     end
     %plot
@@ -101,4 +104,12 @@ while ~isempty(b)
     end
 end
 y= sum(xe(:));
+end
+
+function k = get_key(bt)
+%k = num2str(bt(:)');
+i1 = sub2ind([110,110,3,3],bt(1,1),bt(1,2),bt(2,1)+2,bt(2,2)+2);
+% i2 = sub2ind([110,110],bt(2,1)+2,bt(2,2)+2);
+% k = i1+1i*i2;
+k = i1;
 end
