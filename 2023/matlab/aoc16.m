@@ -64,7 +64,6 @@ while ~isempty(b)
             b{i2} = [b1(1,:);d1];
             
             bt = [b1(1,:);-d1];
-%             c_key = num2str(bt(:)');
             c_key = get_key(bt);
             if ~b_past(c_key)
                 b{end+1} = [b1(1,:);-d1];
