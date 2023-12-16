@@ -7,7 +7,7 @@ x = cat(1,lines{:});
 
 %% part 1
 b = {[1,0;0,1]};
-p1 = count_energized(x,b);
+p1 = count_energized(x,b,1);
 disp(p1);
 
 %% part 2
@@ -30,13 +30,13 @@ end
 e = zeros(size(bs));
 parfor i1 = 1:numel(bs)
     b0 = bs(i1);
-    e(i1) = count_energized(x,b0);
+    e(i1) = count_energized(x,b0,0);
 end
 p2 = max(e);
 disp(p2);
 
 
-function y = count_energized(x,b)
+function y = count_energized(x,b,p)
 b_past = containers.Map();%remove beam states that already existed
 xe = zeros(size(x));
 while ~isempty(b)
@@ -57,37 +57,22 @@ while ~isempty(b)
         ne = x(pn(1),pn(2));
         b1(1,:) = b1(1,:)+d;
         b{i2} = b1;
-        switch ne
-            case '|'
-                if abs(d(2)) == 1
-                    d1 = fliplr(b1(2,:));
-                    b{i2} = [b1(1,:);d1];
-                    
-                    bt = [b1(1,:);-d1];
-                    c_key = num2str(bt(:)');
-                    if ~b_past.isKey(c_key)
-                        b{end+1} = [b1(1,:);-d1];
-                        b_past(c_key) = [];
-                    end
-                end
-            case '-'
-                if abs(d(1)) == 1
-                    d1 = fliplr(b1(2,:));
-                    b{i2} = [b1(1,:);d1];
-                    
-                    bt = [b1(1,:);-d1];
-                    c_key = num2str(bt(:)');
-                    if ~b_past.isKey(c_key)
-                        b{end+1} = [b1(1,:);-d1];
-                        b_past(c_key) = [];
-                    end
-                end
-            case '\'
-                b1(2,:) = fliplr(d);
-                b{i2} = b1;
-            case '/'
-                b1(2,:) = -fliplr(d);
-                b{i2} = b1;
+        if (ne == '|'&&abs(d(2)) == 1)||(ne == '-'&&abs(d(1)) == 1)
+            d1 = fliplr(b1(2,:));
+            b{i2} = [b1(1,:);d1];
+            
+            bt = [b1(1,:);-d1];
+            c_key = num2str(bt(:)');
+            if ~b_past.isKey(c_key)
+                b{end+1} = [b1(1,:);-d1];
+                b_past(c_key) = [];
+            end
+        elseif ne ==  '\'
+            b1(2,:) = fliplr(d);
+            b{i2} = b1;
+        elseif ne ==  '/'
+            b1(2,:) = -fliplr(d);
+            b{i2} = b1;
         end
     end
     if isempty(b)
@@ -101,17 +86,19 @@ while ~isempty(b)
             b_past(c_key) = [];
         end
     end
-%     %plot
-%     bm = xe;
-%     for i2 = 1:numel(b)
-%         if ~isempty(b{i2})
-%             bm(b{i2}(1,1),b{i2}(1,2)) = 2;
-%         end
-%     end
-%     figure(101)
-%     imagesc(bm);
-%     caxis([0 2])
-%     drawnow();
+    %plot
+    if p
+        bm = xe;
+        for i2 = 1:numel(b)
+            if ~isempty(b{i2})
+                bm(b{i2}(1,1),b{i2}(1,2)) = 2;
+            end
+        end
+        figure(101)
+        imagesc(bm);
+        caxis([0 2])
+        drawnow();
+    end
 end
 y= sum(xe(:));
 end
