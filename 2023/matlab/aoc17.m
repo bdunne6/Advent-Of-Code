@@ -6,6 +6,12 @@ txt = read_txt(input_path);
 [m,s_pos,e_pos] = parse_input(txt);
 
 
+%idea: Is there a way to use Dijkstra but construct the graph such that
+%position plus how you got to the position together make a node. I.e. a
+%node is not a position but a combination of position, direction stepped
+%onto the node, and whether you took 3 steps in a row. node =
+%(pos,dir,steps_equal_3)
+
 p = struct();
 p.rc = [1,1];
 p.w = 0;
@@ -14,30 +20,50 @@ p.dir = [1,0];
 
 % search_paths(m,p)
 
+
 ps = PathSearcher(m);
+ps.dfs(p);
+wb1  = ps.wbest;
+figure;
+imagesc(wb1);
+ps.i_cnt
 
-ps.search_paths(p);
-imagesc(ps.wbest);
+p1 = wb1(end);
+disp(p1);
 
-pb = ps.pbest{end};
+ps = PathSearcher(m);
+ps.bfs(p);
+wb2  = ps.wbest;
+figure;
+imagesc(wb2);
 
-% wc = diff(fliplr([pb.w]));
-bpw = zeros(size(m));
-% rc = [pb.rc];
+p1 = wb2(end);
+disp(p1);
 
-% rca = cat(1,pb.rc);
-for i1 = 1:numel(pb)
-    rc = pb(i1).rc;
-    bpw(rc(1),rc(2)) = pb(i1).w;
-end
+% 
+% figure;
+% imagesc(wb2-wb1)
+
+
+
+% pb = ps.pbest{end};
+% 
+% % wc = diff(fliplr([pb.w]));
+% bpw = zeros(size(m));
+% % rc = [pb.rc];
+% 
+% % rca = cat(1,pb.rc);
+% for i1 = 1:numel(pb)
+%     rc = pb(i1).rc;
+%     bpw(rc(1),rc(2)) = pb(i1).w;
+% end
 % figure;
 % imagesc(bpw)
 % hold on;
 % plot(rca(:,2),rca(:,1),'.-');
 
 
-p1 = ps.wbest(end);
-disp(p1);
+
 
 % search_paths(p,m);
 
