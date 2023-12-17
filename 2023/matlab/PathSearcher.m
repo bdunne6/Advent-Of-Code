@@ -6,7 +6,8 @@ classdef PathSearcher < handle
         m
         t
         wbest
-        pbest 
+        pbest
+        i_cnt
     end
     
     methods
@@ -16,16 +17,18 @@ classdef PathSearcher < handle
             obj.t = zeros(size(m));
             obj.wbest = inf(size(m));
             obj.pbest = cell(size(m));
+            obj.i_cnt = 0;
         end
         
-        function search_paths(obj,pa)
-            p = pa(1);
+        function search_paths(obj,p)
             %             w_new = p.w + obj.m(p.rc(1),p.rc(2))
+            obj.i_cnt = obj.i_cnt + 1;
+            
+            
             if p.w>=obj.wbest(p.rc(1),p.rc(2))
                 return;
             else
                 obj.wbest(p.rc(1),p.rc(2)) = p.w;
-                obj.pbest{p.rc(1),p.rc(2)} = pa; 
             end
             
             m = obj.m;
@@ -44,17 +47,24 @@ classdef PathSearcher < handle
             
             rc1 = rc1(i_v,:);
             d1 = d(i_v,:);
+%             if mod(obj.i_cnt,1) == 0
+%                 figure(101)
+%                 imagesc(obj.wbest);
+%                 	colorbar;
+%                     %caxis([0 50000])
+%                 drawnow();
+%                
+%             end
             
             
-            
-%             obj.t(p.rc(1),p.rc(2)) = obj.t(p.rc(1),p.rc(2))+1;
-%             figure(101)
-%                                     imagesc(obj.wbest);
-%                                     drawnow();
-%             mt = zeros(size(m));
-%             mt(p.rc(1),p.rc(2)) = 1;
-%             imagesc(mt);
-%             drawnow();
+            %             obj.t(p.rc(1),p.rc(2)) = obj.t(p.rc(1),p.rc(2))+1;
+            %             figure(101)
+            %                                     imagesc(obj.wbest);
+            %                                     drawnow();
+            %             mt = zeros(size(m));
+            %             mt(p.rc(1),p.rc(2)) = 1;
+            %             imagesc(mt);
+            %             drawnow();
             
             for i1 = 1:size(rc1,1)
                 pn_i1 = p;
@@ -64,8 +74,7 @@ classdef PathSearcher < handle
                     pn_i1.n_steps = pn_i1.n_steps + 1;
                 end
                 pn_i1.dir = d1(i1,:);
-                pa = [pn_i1,pa];
-                obj.search_paths(pa);
+                obj.search_paths(pn_i1);
             end
             
         end
