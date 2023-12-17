@@ -1,5 +1,5 @@
 clear; close all;
-input_path = fullfile(get_input_root,'day_17_sample.txt');
+input_path = fullfile(get_input_root,'day_17.txt');
 txt = read_txt(input_path);
 
 %parse input
@@ -17,7 +17,27 @@ p.dir = [1,0];
 ps = PathSearcher(m);
 
 ps.search_paths(p);
-imagesc(ps.wbest)
+imagesc(ps.wbest);
+
+pb = ps.pbest{end};
+
+wc = diff(fliplr([pb.w]));
+bpw = zeros(size(m));
+rc = [pb.rc];
+
+rca = cat(1,pb.rc);
+for i1 = 1:numel(pb)
+    rc = pb(i1).rc;
+    bpw(rc(1),rc(2)) = pb(i1).w;
+end
+figure;
+imagesc(bpw)
+hold on;
+plot(rca(:,2),rca(:,1),'.-');
+
+
+p1 = bpw(end);
+disp(p1);
 
 % search_paths(p,m);
 
