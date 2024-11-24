@@ -2,7 +2,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 input_path = '..\inputs\day_3.txt'
 
 txt = open(input_path).read()
@@ -15,8 +14,6 @@ for l in lines:
     ws.append(l.split(','))
     
 wires = [np.zeros((1,2),int)]*len(ws)
-
-
 #part 1 #######################################
 for i,w in enumerate(ws):
     for s in w:
