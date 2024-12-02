@@ -6,26 +6,14 @@ txt = open(input_path).read()
 
 lines = txt.split('\n')
 
-v = [[int(x) for x in l.split()] for l in lines]
+r = [[int(x) for x in l.split()] for l in lines]
+
+def is_safe(n):
+    nd = np.diff(n)
+    return (np.all(nd < 0) or np.all(nd > 0)) and (np.all(abs(nd)>=1) and np.all(abs(nd)<=3))
 
 #part1 ########################################################################
-s = 0
-for e in v: 
-    n = np.array(e)
-    nd = np.diff(n)
-    if (np.all(nd < 0) or np.all(nd > 0)) and (np.all(abs(nd)>=1) and np.all(abs(nd)<=3)):
-        s+=1
-print(s)
+print(sum([is_safe(n) for n in r]))
 
 #part2 ########################################################################
-s = np.zeros(len(v))
-for i,e in enumerate(v): 
-    n0 = np.array(e)
-    for j in range(len(e)):
-        n = np.delete(n0,j)
-        nd = np.diff(n)
-        if (np.all(nd < 0) or np.all(nd > 0)) and (np.all(abs(nd)>=1) and np.all(abs(nd)<=3)):
-            s[i] = 1
-            break
-
-print(sum(s))
+print(sum(any(is_safe(np.delete(n,j)) for j in range(len(n))) for n in r))
