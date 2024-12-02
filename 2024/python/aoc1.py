@@ -10,7 +10,6 @@ v = [x.split('  ') for x in lines]
 L = list(zip(*v))
 
 #part 1 #######################################################################
-
 L[0] = np.array([int(x) for x in L[0]])
 L[1] = np.array([int(x) for x in L[1]])
 
