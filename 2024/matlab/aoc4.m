@@ -1,5 +1,4 @@
 input_path = fullfile(get_input_root,'day_4.txt');
-
 lines = strsplit(read_txt(input_path),crlf);
 X = cat(1,lines{:});
 
