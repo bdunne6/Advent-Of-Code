@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from functools import lru_cache
 
 def base_n(x,n):
     if x == 0:
@@ -23,13 +24,18 @@ lines = txt.split('\n')
 lines = [parse_line(x) for x in lines]
 
 #part 1 #######################################################################
-matching = []
-for line in lines: 
-    test = line[0]
-    inputs = line[1];
-    n_op = len(inputs)-1;
-    
-    combos = [base_n(x,2).zfill(n_op) for x in list(range(pow(2,n_op)))]
+def iterate_val_p1(inputs,c,n):
+    val = inputs[0]
+    for k in range(n):
+        if c[k] == '0': #+ case    
+            val = val + inputs[k+1]
+        elif c[k] == '1': #* case
+            val = val * inputs[k+1]
+        if val > test:
+            break
+
+def find_match_p1(combos,inputs,test):
+    mval = 0
     for c in combos:
         val = inputs[0]
         for k in range(len(c)):
@@ -38,21 +44,27 @@ for line in lines:
             elif c[k] == '1': #* case
                 val = val * inputs[k+1]
             if val > test:
-                break #sequence only increases
+                break
         if test == val:
-            matching.append(val)
-            break
+            mval = test
+    return mval
 
-print(sum(matching))
-
-#part 2 #######################################################################
+#run part 1
 matching = []
-for i,line in enumerate(lines): 
+for line in lines: 
     test = line[0]
     inputs = line[1];
     n_op = len(inputs)-1;
     
-    combos = [base_n(x,3).zfill(n_op) for x in list(range(pow(3,n_op)))]
+    combos = [base_n(x,2).zfill(n_op) for x in list(range(pow(2,n_op)))]
+    if find_match_p1(combos,inputs,test):
+          matching.append(test)
+
+print(sum(matching))
+
+#part 2 #######################################################################
+def find_match_p2(combos,inputs,test):
+    mval = 0
     for c in combos:
         val = inputs[0]
         for k in range(len(c)):
@@ -63,9 +75,20 @@ for i,line in enumerate(lines):
             elif c[k] == '2': #|| case
                 val = int(str(val) + str(inputs[k+1]))
             if val > test:
-                break #sequence only increases
+                  break
         if test == val:
-            matching.append(val)
-            break
+            mval = test
+        return mval
+
+#run part 2
+matching = []
+for i,line in enumerate(lines): 
+    test = line[0]
+    inputs = line[1];
+    n_op = len(inputs)-1;
+    
+    combos = [base_n(x,3).zfill(n_op) for x in list(range(pow(3,n_op)))]
+    if find_match_p2(combos,inputs,test):
+        matching.append(test)
         
 print(sum(matching))
