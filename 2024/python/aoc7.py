@@ -24,21 +24,25 @@ lines = txt.split('\n')
 lines = [parse_line(x) for x in lines]
 
 #part 1 #######################################################################
-@lru_cache(maxsize=None)
-def iterate_val_p1(val,ck,next_input):
-    if ck == '0': #+ case    
-        val = val + next_input
-    elif ck == '1': #* case
-        val = val * next_input
-    return val
-
+def iterate_val_p1(inputs,c,n):
+    val = inputs[0]
+    for k in range(n):
+        if c[k] == '0': #+ case    
+            val = val + inputs[k+1]
+        elif c[k] == '1': #* case
+            val = val * inputs[k+1]
+        if val > test:
+            break
 
 def find_match_p1(combos,inputs,test):
     mval = 0
     for c in combos:
         val = inputs[0]
         for k in range(len(c)):
-            val = iterate_val_p1(val,c[k],inputs[k+1])
+            if c[k] == '0': #+ case    
+                val = val + inputs[k+1]
+            elif c[k] == '1': #* case
+                val = val * inputs[k+1]
             if val > test:
                 break
         if test == val:
@@ -59,28 +63,22 @@ for line in lines:
 print(sum(matching))
 
 #part 2 #######################################################################
-@lru_cache(maxsize=None)
-def iterate_val_p2(val,ck,next_input):
-    if ck == '0': #+ case    
-        val = val + next_input
-    elif ck == '1': #* case
-        val = val * next_input
-    elif ck == '2': #|| case
-        val = int(str(val) + str(next_input))
-    return val
-
-
 def find_match_p2(combos,inputs,test):
     mval = 0
     for c in combos:
         val = inputs[0]
         for k in range(len(c)):
-            val = iterate_val_p2(val,c[k],inputs[k+1])
+            if c[k] == '0': #+ case    
+                val = val + inputs[k+1]
+            elif c[k] == '1': #* case  
+                val = val * inputs[k+1]
+            elif c[k] == '2': #|| case
+                val = int(str(val) + str(inputs[k+1]))
             if val > test:
                   break
         if test == val:
             mval = test
-    return mval
+        return mval
 
 #run part 2
 matching = []
