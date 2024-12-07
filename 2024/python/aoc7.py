@@ -19,9 +19,7 @@ def parse_line(line):
 #prepare variables ############################################################
 input_path = '..\inputs\day_7.txt'
 txt = open(input_path).read()
-
 lines = txt.split('\n')
-
 lines = [parse_line(x) for x in lines]
 
 #part 1 #######################################################################
@@ -40,7 +38,7 @@ for line in lines:
             elif c[k] == '1': #* case
                 val = val * inputs[k+1]
             if val > test:
-                break
+                break #sequence only increases
         if test == val:
             matching.append(val)
             break
@@ -65,7 +63,7 @@ for i,line in enumerate(lines):
             elif c[k] == '2': #|| case
                 val = int(str(val) + str(inputs[k+1]))
             if val > test:
-                break
+                break #sequence only increases
         if test == val:
             matching.append(val)
             break
