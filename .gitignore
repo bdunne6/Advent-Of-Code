@@ -4,3 +4,5 @@
 2022/python/.spyproject/*
 .spyproject/
 *.txt
+*.csv
+*.mat
