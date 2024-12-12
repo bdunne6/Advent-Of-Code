@@ -19,9 +19,9 @@ for v in uX:
     uXL = np.unique(XL.flatten())[1:]
     for u in uXL:
         Xum = (u==XL).astype(int)
-        Xe = conv2(X,k,'same')>0 #image dilation
+        Xud = conv2(Xum,k,'same')>0 #image dilation
         Xes = conv2(Xum,k,'same')
-        Xp = (Xe-Xum)*Xes
+        Xp = (Xud-Xum)*Xes
         P += sum(Xp.flatten())*sum(Xum.flatten())
 print(P)
 

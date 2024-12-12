@@ -3,7 +3,6 @@ from collections import Counter
 input_path = '..\inputs\day_11.txt'
 X  = open(input_path).read().split()
 X = [int(x) for x in X]
-
 #functions ####################################################################
 def count_stones(X,n):
     X = Counter(dict(zip([int(x) for x in X],[1]*len(X))))
