@@ -32,11 +32,11 @@ def corr2(X,k):
     return conv2(X,k,'same')/np.sum(k.flatten()**2)
 
 kd = [np.array([[1,0],[0,1]]),np.array([[0,1],[1,0]])]
-ks = [];
+ks = []
 ksb = np.array([[1,0],[0,0]])
 for i1 in range(0, 4):  
     ks.extend([np.rot90(1-ksb, i1),np.rot90(ksb, i1)])         
-P = 0;
+P = 0
 for v in uX:
     XL = label(v==X,k)[0]
     uXL = np.unique(XL.flatten())[1:]

@@ -53,7 +53,7 @@ for i1 = 1:numel(ux)
             i_match = abs(normxcorr2(ks{i3},Xi2) - 1)<10*eps;
             sides = sides + 1*sum(i_match(:));
         end
-        P = P + sum(sides*sum(Xi2(:)));
+        P = P + sides*sum(Xi2(:));
     end
 end
 disp(P)
