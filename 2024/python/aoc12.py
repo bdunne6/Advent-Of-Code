@@ -15,40 +15,37 @@ k = np.array([[0,1,0],[1,1,1],[0,1,0]])
 uX = np.unique(X.flatten())[1:]
 P = 0
 for v in uX:
-    Xi = (v==X).astype(int)
-    XiL = label(Xi,k)[0]
-    uXiL = np.unique(XiL.flatten())[1:]
-    for u in uXiL:
-        Xi2 = (u==XiL).astype(int)
+    XL = label(v==X,k)[0]
+    uXL = np.unique(XL.flatten())[1:]
+    for u in uXL:
+        Xum = (u==XL).astype(int)
         Xe = conv2(X,k,'same')>0 #image dilation
-        Xes = conv2(Xi2,k,'same')
-        Xp = Xe-Xi2
-        Xp = Xp*Xes
-        P += sum(Xp.flatten())*sum(Xi2.flatten())
+        Xes = conv2(Xum,k,'same')
+        Xp = (Xe-Xum)*Xes
+        P += sum(Xp.flatten())*sum(Xum.flatten())
 print(P)
 
 #part 2 #######################################################################
 def corr2(X,k):
-    X = X - np.mean(X.flatten());
-    k = k - np.mean(k.flatten());
-    return conv2(X,k,'same')/np.sum(k.flatten()**2);
+    X = X - np.mean(X.flatten())
+    k = k - np.mean(k.flatten())
+    return conv2(X,k,'same')/np.sum(k.flatten()**2)
 
-kd = [np.array([[1,0],[0,1]]),np.array([[0,1],[1,0]])];
+kd = [np.array([[1,0],[0,1]]),np.array([[0,1],[1,0]])]
 ks = [];
-ksb = np.array([[1,0],[0,0]]);
+ksb = np.array([[1,0],[0,0]])
 for i1 in range(0, 4):  
     ks.extend([np.rot90(1-ksb, i1),np.rot90(ksb, i1)])         
 P = 0;
 for v in uX:
-    Xi = (v==X).astype(int)
-    XiL = label(Xi,k)[0]
-    uXiL = np.unique(XiL.flatten())[1:]
-    for u in uXiL:
-        Xi2 = (u==XiL).astype(int)
-        sides = 0;
+    XL = label(v==X,k)[0]
+    uXL = np.unique(XL.flatten())[1:]
+    for u in uXL:
+        Xum = (u==XL).astype(int)
+        sides = 0
         for kde in kd:
-            sides = sides + 2*np.sum(np.isclose(corr2(Xi2,kde),1));
+            sides = sides + 2*np.sum(np.isclose(corr2(Xum,kde),1))
         for kse in ks:
-            sides = sides + 1*np.sum(np.isclose(corr2(Xi2,kse),1));
-        P = P + sides*sum(Xi2.flatten())
+            sides = sides + 1*np.sum(np.isclose(corr2(Xum,kse),1))
+        P = P + sides*sum(Xum.flatten())
 print(P)
