@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import re
-from PIL import Image
-from PIL import ImageOps
-
 #prepare variables ############################################################
 input_path = '..\inputs\day_14.txt'
 txt = open(input_path).read()
@@ -18,8 +15,9 @@ for line in lines:
 
 #parts 1 and 2 ################################################################    
 size = [101,103]
-#for i,t in enumerate(range(10000)):
-for i,t in enumerate([100,6532]):
+N = 10000
+v = np.zeros(N)
+for i,t in enumerate(range(N)):
     pv = np.array(guards)
     m = np.zeros((size[1],size[0]))
     for g in pv:
@@ -32,14 +30,8 @@ for i,t in enumerate([100,6532]):
     q3 = sum((pv[:,0] > (size[0]-1)/2) & (pv[:,1] < (size[1]-1)/2))
     q4 = sum((pv[:,0] > (size[0]-1)/2) & (pv[:,1] > (size[1]-1)/2))
     
+    v[i] = sum(abs(pv[:,0]-np.mean(pv[:,0]))) + sum(abs(pv[:,1]-np.mean(pv[:,1])))
     if t == 100:
-        q = [q1,q2,q3,q4]
-        print(np.prod(q))
+        print(np.prod([q1,q2,q3,q4]))
     
-    for pi in pv:
-        m[pi[1],pi[0]] += 1
-    
-    image = Image.fromarray(m.astype('uint8'))
-    image = ImageOps.autocontrast(image, cutoff=0)
-    image = image.resize((m.shape[0]*4, m.shape[1]*4))
-    image.save('plots\\'+str(t) +'.png')
+print(np.argmin(v))
