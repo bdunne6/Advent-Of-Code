@@ -7,3 +7,5 @@
 *.mat
 *.png
 export-key
+*s1.txt
+*_sample.txt
