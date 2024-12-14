@@ -10,8 +10,7 @@ pat = re.compile('p=(.*) v=(.*)')
 for line in lines:
     p = [int(x) for x in pat.search(line).group(1).split(',')]
     v = [int(x) for x in pat.search(line).group(2).split(',')]
-    p.extend(v)
-    guards.append(p)
+    guards.append(p+v)
 
 #parts 1 and 2 ################################################################    
 size = [101,103]
@@ -22,8 +21,7 @@ for i,t in enumerate(range(N)):
     m = np.zeros((size[1],size[0]))
     for g in pv:
         g[0:2] += g[2:4]*t
-        g[0] = g[0]%size[0]
-        g[1] = g[1]%size[1]
+        g[0:2] = [g[0]%size[0],g[1]%size[1]]
         
     q1 = sum((pv[:,0] < (size[0]-1)/2) & (pv[:,1] < (size[1]-1)/2))
     q2 = sum((pv[:,0] < (size[0]-1)/2) & (pv[:,1] > (size[1]-1)/2))
