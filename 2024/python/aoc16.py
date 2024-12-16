@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-import matplotlib.pyplot as plt
-from collections import deque
 from itertools import product
 import networkx as nx
-
 
 #functions
 def find_nonzero(X):
@@ -12,7 +9,6 @@ def find_nonzero(X):
     p = list(zip(p[0].tolist(),p[1].tolist()))
     return p
     
-
 #prepare variables ############################################################
 input_path = '..\inputs\day_16.txt'
 txt = open(input_path).read()
@@ -22,23 +18,16 @@ X = np.zeros((len(lines),len(lines[0])))
 for i,line in enumerate(lines):
     X[i,:] = np.array([ord(c) for c in line]) #numeric into padded array
     
-
-
-#part 1 #
+#part 1 #######################################################################
 s = find_nonzero(X == 83)[0]
 e = find_nonzero(X == 69)[0]
-
 X[s] = 46
 X[e] = 46
 
 p = set(find_nonzero(X == 46))
-#plt.imshow(X)
 
-G = nx.DiGraph()
 d = set([(-1,0),(1,0),(0,-1),(0,1)])
-
 pd = set(product(p,d))
-
 mdict = {(-1,0):[(0,1),(0,-1),(-1,0)],
          (1,0):[(0,1),(0,-1),(1,0)],
          (0,1):[(1,0),(-1,0),(0,1)],
@@ -62,3 +51,13 @@ ed2 = (e,(-1,0))
 W1 = nx.dijkstra_path_length(G, sd, ed1)
 W2 = nx.dijkstra_path_length(G, sd, ed2)
 print(min(W1,W2))
+
+#part 2 #######################################################################
+ed = ed2 if W1<W2 else ed1
+p_all = set()
+paths = list(nx.all_shortest_paths(G,sd,ed1,weight = 'weight'))
+for path in paths:
+    [p,d] = zip(*path)
+    p_all.update(p)
+
+print(len(p_all))
