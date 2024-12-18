@@ -12,14 +12,14 @@ size = [71,71]
 p = list(product(range(size[0]),range(size[1])))
 d = set([(-1,0),(1,0),(0,-1),(0,1)])
 #functions ####################################################################
-def build_graph(p1,G=nx.Graph()):
+def build_graph(p1):
+    G = nx.Graph()
     for px,py in p1:
         for dx,dy in d:
             pn = (px + dx,py + dy)
             if pn in p1:
                 G.add_edge((px,py),pn)
     return G
-
 #part 1 #######################################################################
 i_t = 1024
 G = build_graph(set(p).difference(b[:i_t]))
