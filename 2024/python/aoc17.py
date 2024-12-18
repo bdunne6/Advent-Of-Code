@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import numpy as np
+#import numpy as np
 
 #prepare variables ############################################################
 input_path = '..\inputs\day_17.txt'
@@ -9,7 +9,9 @@ lines = txt.split('\n')
 reg = []
 for i in range(0,3):
      reg.append(int(lines[i].split(':')[1]))
-prog = [int(x) for x in lines[4].split(':')[1].split(',')]
+     
+prog_txt = lines[4].split(':')[1].strip()
+prog = [int(x) for x in prog_txt.split(',')]
 #prog = list(zip(prog[::2],prog[1::2]))
 
 #part 1 #######################################################################
@@ -78,3 +80,27 @@ while ip < len(prog):
 
 print(pout.strip(','))
 
+#part 2
+iA = 0
+prog_txt = prog_txt+','
+while pout != prog_txt:
+    reg[0] = iA
+    reg[1] = 0
+    reg[2] = 0
+    ip = 0
+    pout = ''
+    
+    while ip < len(prog):
+        op_fun = opdict[prog[ip]]
+        op_fun(reg,prog[ip+1])
+        
+        if pout != prog_txt[:len(pout)]:
+            break
+    iA+= 1
+    
+    if iA%1000000==0:
+        print(iA)
+        #print(ip)
+# print(pout.strip(','))
+# print(prog_txt)
+print(iA)
